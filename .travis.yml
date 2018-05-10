@@ -12,12 +12,13 @@ branches:
     - master
 
 install:
-  - go get
-  - go get github.com/mitchellh/gox
+  - echo 'Installing dependencies ...'
+  - go get -v
+  - go get -v github.com/mitchellh/gox
 
 script:
   - echo 'Building go artifacts for all platforms with gox ...'
-  - gox -arch="amd64" -os="darwin linux windows" -output "dist/{{.OS}}_{{.Arch}}/{{.Dir}}" .
+  - gox -verbose -arch="amd64" -os="darwin linux windows" -output "dist/{{.OS}}_{{.Arch}}/{{.Dir}}" .
 
 after_script:
   - echo 'Creating one archive per each platform ...'
