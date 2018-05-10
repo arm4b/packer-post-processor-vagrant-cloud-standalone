@@ -1,10 +1,10 @@
-package vagrantcloud
+package main
 
 import (
 	"fmt"
 )
 
-const BuilderId = "pearkes.post-processor.vagrant-cloud"
+const BuilderId = "pearkes.post-processor.vagrant-cloud-standalone"
 
 type Artifact struct {
 	Tag      string

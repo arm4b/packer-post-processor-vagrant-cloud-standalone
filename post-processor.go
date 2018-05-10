@@ -2,7 +2,7 @@
 // post-processor that uploads artifacts from the vagrant post-processor
 // to Vagrant Cloud (vagrantcloud.com) or manages self hosted boxes on the
 // Vagrant Cloud
-package vagrantcloud
+package main
 
 import (
 	"fmt"
@@ -31,6 +31,11 @@ type Config struct {
 	VagrantCloudUrl string `mapstructure:"vagrant_cloud_url"`
 
 	BoxDownloadUrl string `mapstructure:"box_download_url"`
+
+	// Target provider name like 'virtualbox'
+	ProviderName string `mapstructure:"provider"`
+	// Local artifact file path to upload
+	ArtifactFile string `mapstructure:"artifact"`
 
 	ctx interpolate.Context
 }
@@ -82,9 +87,11 @@ func (p *PostProcessor) Configure(raws ...interface{}) error {
 
 	// required configuration
 	templates := map[string]*string{
-		"box_tag":      &p.config.Tag,
-		"version":      &p.config.Version,
-		"access_token": &p.config.AccessToken,
+		"box_tag":       &p.config.Tag,
+		"version":       &p.config.Version,
+		"access_token":  &p.config.AccessToken,
+		"provider_name": &p.config.ProviderName,
+		"artifact":      &p.config.ArtifactFile,
 	}
 
 	for key, ptr := range templates {
@@ -102,16 +109,15 @@ func (p *PostProcessor) Configure(raws ...interface{}) error {
 }
 
 func (p *PostProcessor) PostProcess(ui packer.Ui, artifact packer.Artifact) (packer.Artifact, bool, error) {
-	// Only accepts input from the vagrant post-processor
-	if artifact.BuilderId() != "mitchellh.post-processor.vagrant" {
+	// We assume that there is only one .box file to upload
+	if !strings.HasSuffix(p.config.ArtifactFile, ".box") {
 		return nil, false, fmt.Errorf(
-			"Unknown artifact type, requires box from vagrant post-processor: %s", artifact.BuilderId())
+			"Unknown artifact file specified, expected '.box', got: %s", p.config.ArtifactFile)
 	}
 
-	// We assume that there is only one .box file to upload
-	if !strings.HasSuffix(artifact.Files()[0], ".box") {
+	if !fileExists(p.config.ArtifactFile) {
 		return nil, false, fmt.Errorf(
-			"Unknown files in artifact from vagrant post-processor: %s", artifact.Files())
+			"Artifact file specified doesn't exist: %s", p.config.ArtifactFile)
 	}
 
 	if p.warnAtlasToken {
@@ -121,12 +127,9 @@ func (p *PostProcessor) PostProcess(ui packer.Ui, artifact packer.Artifact) (pac
 	// create the HTTP client
 	p.client = VagrantCloudClient{}.New(p.config.VagrantCloudUrl, p.config.AccessToken)
 
-	// The name of the provider for vagrant cloud, and vagrant
-	providerName := providerFromBuilderName(artifact.Id())
-
 	p.config.ctx.Data = &boxDownloadUrlTemplate{
 		ArtifactId: artifact.Id(),
-		Provider:   providerName,
+		Provider:   p.config.ProviderName,
 	}
 	boxDownloadUrl, err := interpolate.Render(p.config.BoxDownloadUrl, &p.config.ctx)
 	if err != nil {
@@ -138,9 +141,9 @@ func (p *PostProcessor) PostProcess(ui packer.Ui, artifact packer.Artifact) (pac
 	state.Put("config", p.config)
 	state.Put("client", p.client)
 	state.Put("artifact", artifact)
-	state.Put("artifactFilePath", artifact.Files()[0])
+	state.Put("artifactFilePath", p.config.ArtifactFile)
 	state.Put("ui", ui)
-	state.Put("providerName", providerName)
+	state.Put("providerName", p.config.ProviderName)
 	state.Put("boxDownloadUrl", boxDownloadUrl)
 
 	// Build the steps
@@ -172,7 +175,7 @@ func (p *PostProcessor) PostProcess(ui packer.Ui, artifact packer.Artifact) (pac
 		return nil, false, rawErr.(error)
 	}
 
-	return NewArtifact(providerName, p.config.Tag), true, nil
+	return NewArtifact(p.config.ProviderName, p.config.Tag), true, nil
 }
 
 // Runs a cleanup if the post processor fails to upload
@@ -183,23 +186,11 @@ func (p *PostProcessor) Cancel() {
 	}
 }
 
-// converts a packer builder name to the corresponding vagrant
-// provider
-func providerFromBuilderName(name string) string {
-	switch name {
-	case "aws":
-		return "aws"
-	case "scaleway":
-		return "scaleway"
-	case "digitalocean":
-		return "digitalocean"
-	case "virtualbox":
-		return "virtualbox"
-	case "vmware":
-		return "vmware_desktop"
-	case "parallels":
-		return "parallels"
-	default:
-		return name
+// Check if target file exists
+func fileExists(path string) bool {
+	_, err := os.Stat(path)
+	if os.IsNotExist(err) {
+		return false
 	}
+	return err != nil
 }
