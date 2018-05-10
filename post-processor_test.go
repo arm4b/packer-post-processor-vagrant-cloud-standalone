@@ -14,6 +14,8 @@ func testGoodConfig() map[string]interface{} {
 		"version_description": "bar",
 		"box_tag":             "hashicorp/precise64",
 		"version":             "0.5",
+		"provider":            "virtualbox",
+		"artifact":            "none.box",
 	}
 }
 
@@ -90,14 +92,4 @@ func testUi() *packer.BasicUi {
 
 func TestPostProcessor_ImplementsPostProcessor(t *testing.T) {
 	var _ packer.PostProcessor = new(PostProcessor)
-}
-
-func TestProviderFromBuilderName(t *testing.T) {
-	if providerFromBuilderName("foobar") != "foobar" {
-		t.Fatal("should copy unknown provider")
-	}
-
-	if providerFromBuilderName("vmware") != "vmware_desktop" {
-		t.Fatal("should convert provider")
-	}
 }
