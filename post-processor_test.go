@@ -1,4 +1,4 @@
-package vagrantcloud
+package main
 
 import (
 	"bytes"
