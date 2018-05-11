@@ -10,11 +10,6 @@ go:
 env:
   - TRAVIS_TAG="v0.1.0"
 
-branches:
-  only:
-    - master
-    - /^v\d+\.\d+\.\d+(-\S*)?$/
-
 install:
   - echo 'Installing dependencies ...'
   - go get -v
