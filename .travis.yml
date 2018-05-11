@@ -10,8 +10,7 @@ go:
 branches:
   only:
     - master
-    # build on tag
-    - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
+    - /^v\d+\.\d+\.\d+(-\S*)?$/
 
 install:
   - echo 'Installing dependencies ...'
