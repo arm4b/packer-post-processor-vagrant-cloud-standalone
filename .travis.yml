@@ -7,11 +7,6 @@ go:
   - "1.10"
   - tip
 
-branches:
-  only:
-    - master
-    - /^v\d+\.\d+\.\d+(-\S*)?$/
-
 install:
   - echo 'Installing dependencies ...'
   - go get -v
