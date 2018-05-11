@@ -7,6 +7,9 @@ go:
   - "1.10"
   - tip
 
+env:
+  - TRAVIS_TAG="v0.1.0"
+
 branches:
   only:
     - master
@@ -25,9 +28,9 @@ script:
 
 before_deploy:
   - echo 'Creating one archive per each platform ...'
-  - zip -j packer-post-processor-vagrant-cloud-standalone_${TRAVIS_TAG}_darwin_amd64.zip ./dist/darwin_amd64/*
-  - zip -j packer-post-processor-vagrant-cloud-standalone_${TRAVIS_TAG}_linux_amd64.zip ./dist/linux_amd64/*
-  - zip -j packer-post-processor-vagrant-cloud-standalone_${TRAVIS_TAG}_windows_amd64.zip ./dist/windows_amd64/*
+  - zip -j packer-post-processor-vagrant-cloud-standalone_darwin_amd64.zip ./dist/darwin_amd64/*
+  - zip -j packer-post-processor-vagrant-cloud-standalone_linux_amd64.zip ./dist/linux_amd64/*
+  - zip -j packer-post-processor-vagrant-cloud-standalone_windows_amd64.zip ./dist/windows_amd64/*
 
 deploy:
   provider: releases
