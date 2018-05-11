@@ -16,12 +16,10 @@ install:
   - go get -v
   - go get -v github.com/mitchellh/gox
 
-before_script:
-  - echo 'Running tests ...'
-  - go test -v
-
 script:
-  - echo 'Building go artifacts for all platforms with gox ...'
+  # Running tests ...
+  - go test -v
+  # Building go artifacts for all platforms with gox ...
   - gox -verbose -arch="amd64" -os="darwin linux windows" -output "dist/{{.OS}}_{{.Arch}}/{{.Dir}}" .
 
 after_script:
