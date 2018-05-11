@@ -186,11 +186,11 @@ func (p *PostProcessor) Cancel() {
 	}
 }
 
-// Check if target file exists
+// Check if target file path exists
 func fileExists(path string) bool {
 	_, err := os.Stat(path)
-	if os.IsNotExist(err) {
-		return false
+	if err == nil {
+		return true
 	}
-	return err != nil
+	return !os.IsNotExist(err)
 }
