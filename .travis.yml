@@ -34,10 +34,8 @@ deploy:
   skip_cleanup: true
   api_key:
     secure: Gg6cjwGoRbxBlGgtRXbwjZUX0MWwbHDuKS2jnXKHZOnxtae+0z8g11SzHnQnooHodzYMBp6JxzxcULjmRaxO0ZL4xqMM+wibgWYcATrYqx+PcqAsdKRQHBT12Sh6AhdQI59Mnvkt4+kP4OaN06DWsIi/zQ3RWzE9Yhe+AE4zBpibUGTCZKMyD/wojuo0bRjki5pVopvx9AxrjGcfgXjtYW8GDUWzgkY3QQXDZ0Xd8MeHV/V3UuB9t8UbuiMTOModSdq/OyrExtQ1lo4UUmMta8HoZi+kXSbucosUH9Jtmj0ZgqfqLm2uqiFZ+MGOjJbuHsPvaJWbqfMlRdLY5Ah2giPJGsxOCG569zb4z+yiC8OLMoMfvdMbp8x1UG9EIcixuq0zmRStIIdjZ6qudC1Z4Gr8XW4p7byInnA9+IR/cjx7QZSGMDgWmZ+kdTFk3sahSCrn8MGPpks6aPwhJBF4HFJP0ELhJB5CAe8J+UDHjSJ5YxGnFyYnHJ5QCVyswJJFCd2U8QZUP9nucAQ2688GUjj3BBWSJkWDS2/6Rbalvuh0iUMCRbF2gMq+XKMZGkO8gxmklIZE/zNGQLi/Nj3Fvbj5IAImW0uowSaJ5ulrqb5X/Yqpk30OqsAOdeQfgFaIHexcgs+BmVHNSKtPZzjgY/nnDHNTJeIiWRRLMxNGpEI=
-  file:
-    - packer-post-processor-vagrant-cloud-standalone_${TRAVIS_TAG}_darwin_amd64.zip
-    - packer-post-processor-vagrant-cloud-standalone_${TRAVIS_TAG}_linux_amd64.zip
-    - packer-post-processor-vagrant-cloud-standalone_${TRAVIS_TAG}_windows_amd64.zip
+  file_glob: true
+  file: *_amd64.zip
   on:
     repo: armab/packer-post-processor-vagrant-cloud-standalone
     tags: true
