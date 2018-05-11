@@ -10,6 +10,7 @@ go:
 branches:
   only:
     - master
+    - /^v\d+\.\d+\.\d+(-\S*)?$/
 
 install:
   - echo 'Installing dependencies ...'
