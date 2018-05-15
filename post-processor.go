@@ -1,7 +1,11 @@
-// vagrant_cloud implements the packer.PostProcessor interface and adds a
-// post-processor that uploads artifacts from the vagrant post-processor
-// to Vagrant Cloud (vagrantcloud.com) or manages self hosted boxes on the
-// Vagrant Cloud
+//vagrant_plugin_standalone post-processor is a fork of core Packer's 'vagrant-cloud' (https://www.packer.io/docs/post-processors/vagrant-cloud.html) plugin.
+//
+//While original plugin requires artifact produced from the previous `vagrant` post-processor
+//involving entire build stage, forked version `vagrant-cloud-standalone` just uploads .box artifact to
+//Vagrant Cloud (vagrantcloud.com) directly by input filepath, hence standalone.
+//
+//It can be useful to split Packer build/deploy stage if you prefer to divide CI/CD or when artifact
+//was already produced before.
 package main
 
 import (
