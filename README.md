@@ -3,7 +3,7 @@
 [![GitHub release](https://img.shields.io/github/release/armab/packer-post-processor-vagrant-cloud-standalone.svg)](https://github.com/armab/packer-post-processor-vagrant-cloud-standalone/releases/latest)
 [![License](https://img.shields.io/github/license/armab/packer-post-processor-vagrant-cloud-standalone.svg?style=flat)](LICENSE)
 
-Packer post-processor plugin for uploading artifacts to [Vagrant Cloud](https://vagrantcloud.com/) from the input filepath.
+[Packer](https://www.packer.io/) post-processor plugin for uploading artifacts to [Vagrant Cloud](https://vagrantcloud.com/) from the input filepath.
 
 ## Description
 This post-processor is a fork of core Packer's [vagrant-cloud](https://www.packer.io/docs/post-processors/vagrant-cloud.html)
@@ -59,6 +59,6 @@ Configuration is the same as original Packer's [vagrant-cloud](https://www.packe
 
 A few settings were added to allow uploading .box artifact from the local file path:
 - `provider` (string)
-  - Box type, Vagrant provider like `virtualbox`, `vmware`, etc.
+  - Box type, Vagrant provider like `virtualbox`, `vmware`, `hyperv` etc.
 - `artifact` (string)
   - Path to artifact file `.box`. to deploy.
